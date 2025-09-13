@@ -1,2 +1,2 @@
-# yezx
-yezx hub是我随便做的一个脚本
+# yezx Hub
+感谢使用yezx Hub
