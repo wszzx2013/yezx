@@ -2,7 +2,7 @@
 ## 加载器:
 
 ```lua
-loadstring(game:HttpGet("https://raw.github.com/wszzx2013/yezx/refs/heads/main/Mian%20script/Loader"))()
+loadstring(game:HttpGet("https://raw.github.com/wszzx2013/yezx/refs/heads/main/Main%20script/Loader"))()
 ```
 
 ### 感谢使用yezx Hub
