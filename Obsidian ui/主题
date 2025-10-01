@@ -42,7 +42,7 @@ do
         ["Yezx"] = {
             1,
             httpService:JSONDecode(
-                [[{"FontColor":"ffffff","MainColor":"fff500","AccentColor":"ffb800","BackgroundColor":"fff500","OutlineColor":"818181"}]]
+                [[{"FontColor":"ffffff","MainColor":"fff500","AccentColor":"ffb800","BackgroundColor":"fff500","OutlineColor":"828282"}]]
             ),
         },
         ["默认"] = {
