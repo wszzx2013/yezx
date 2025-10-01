@@ -35,120 +35,113 @@ end
 local ThemeManager = {}
 do
     ThemeManager.Folder = "ObsidianLibSettings"
-
     ThemeManager.Library = nil
     ThemeManager.AppliedToTab = false
     ThemeManager.BuiltInThemes = {
-        ["Yezx"] = {
-            1,
-            httpService:JSONDecode(
-                [[{"FontColor":"ffffff","MainColor":"fff500","AccentColor":"ffb800","BackgroundColor":"fff500","OutlineColor":"828282"}]]
-            ),
-        },
         ["默认"] = {
-            2,
+            1,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"191919","AccentColor":"7d55ff","BackgroundColor":"0f0f0f","OutlineColor":"282828"}]]
             ),
         },
         ["BBot"] = {
-            3,
+            2,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"1e1e1e","AccentColor":"7e48a3","BackgroundColor":"232323","OutlineColor":"141414"}]]
             ),
         },
         ["Fatality"] = {
-            4,
+            3,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"1e1842","AccentColor":"c50754","BackgroundColor":"191335","OutlineColor":"3c355d"}]]
             ),
         },
-        ["Jester"] = {
-            5,
+        ["小丑"] = {
+            4,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"242424","AccentColor":"db4467","BackgroundColor":"1c1c1c","OutlineColor":"373737"}]]
             ),
         },
-        ["Mint"] = {
-            6,
+        ["薄荷"] = {
+            5,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"242424","AccentColor":"3db488","BackgroundColor":"1c1c1c","OutlineColor":"373737"}]]
             ),
         },
         ["东京之夜"] = {
-            7,
+            6,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"191925","AccentColor":"6759b3","BackgroundColor":"16161f","OutlineColor":"323232"}]]
             ),
         },
         ["Ubuntu"] = {
-            8,
+            7,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"3e3e3e","AccentColor":"e2581e","BackgroundColor":"323232","OutlineColor":"191919"}]]
             ),
         },
-        ["Quartz"] = {
-            9,
+        ["石英"] = {
+            8,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"232330","AccentColor":"426e87","BackgroundColor":"1d1b26","OutlineColor":"27232f"}]]
             ),
         },
         ["Nord"] = {
-            10,
+            9,
             httpService:JSONDecode(
                 [[{"FontColor":"eceff4","MainColor":"3b4252","AccentColor":"88c0d0","BackgroundColor":"2e3440","OutlineColor":"4c566a"}]]
             ),
         },
-        ["Dracula"] = {
-            11,
+        ["德古拉"] = {
+            10,
             httpService:JSONDecode(
                 [[{"FontColor":"f8f8f2","MainColor":"44475a","AccentColor":"ff79c6","BackgroundColor":"282a36","OutlineColor":"6272a4"}]]
             ),
         },
         ["Monokai"] = {
-            12,
+            11,
             httpService:JSONDecode(
                 [[{"FontColor":"f8f8f2","MainColor":"272822","AccentColor":"f92672","BackgroundColor":"1e1f1c","OutlineColor":"49483e"}]]
             ),
         },
         ["Gruvbox"] = {
-            13,
+            12,
             httpService:JSONDecode(
                 [[{"FontColor":"ebdbb2","MainColor":"3c3836","AccentColor":"fb4934","BackgroundColor":"282828","OutlineColor":"504945"}]]
             ),
         },
         ["Solarized"] = {
-            14,
+            13,
             httpService:JSONDecode(
                 [[{"FontColor":"839496","MainColor":"073642","AccentColor":"cb4b16","BackgroundColor":"002b36","OutlineColor":"586e75"}]]
             ),
         },
         ["Catppuccin"] = {
-            15,
+            14,
             httpService:JSONDecode(
                 [[{"FontColor":"d9e0ee","MainColor":"302d41","AccentColor":"f5c2e7","BackgroundColor":"1e1e2e","OutlineColor":"575268"}]]
             ),
         },
         ["One Dark"] = {
-            16,
+            15,
             httpService:JSONDecode(
                 [[{"FontColor":"abb2bf","MainColor":"282c34","AccentColor":"c678dd","BackgroundColor":"21252b","OutlineColor":"5c6370"}]]
             ),
         },
         ["赛博朋克"] = {
-            17,
+            16,
             httpService:JSONDecode(
                 [[{"FontColor":"f9f9f9","MainColor":"262335","AccentColor":"00ff9f","BackgroundColor":"1a1a2e","OutlineColor":"413c5e"}]]
             ),
         },
         ["Oceanic Next"] = {
-            18,
+            17,
             httpService:JSONDecode(
                 [[{"FontColor":"d8dee9","MainColor":"1b2b34","AccentColor":"6699cc","BackgroundColor":"16232a","OutlineColor":"343d46"}]]
             ),
         },
         ["Material"] = {
-            19,
+            18,
             httpService:JSONDecode(
                 [[{"FontColor":"eeffff","MainColor":"212121","AccentColor":"82aaff","BackgroundColor":"151515","OutlineColor":"424242"}]]
             ),
@@ -256,7 +249,7 @@ do
     end
 
     function ThemeManager:LoadDefault()
-        local theme = "Yezx"
+        local theme = "默认"
         local content = isfile(self.Folder .. "/themes/default.txt") and readfile(self.Folder .. "/themes/default.txt")
 
         local isDefault = true
@@ -284,17 +277,17 @@ do
 
     function ThemeManager:SetDefaultTheme(theme)
         assert(self.Library, "必须先设置 ThemeManager.Library！")
-        assert(not self.AppliedToTab, "在将 ThemeManager 应用到标签页后无法设置默认主题！")
+        assert(not self.AppliedToTab, "在将ThemeManager应用到标签页后无法设置默认主题！")
 
         local FinalTheme = {}
         local LibraryScheme = {}
         local fields = { "FontColor", "MainColor", "AccentColor", "BackgroundColor", "OutlineColor" }
         for _, field in pairs(fields) do
             if typeof(theme[field]) == "Color3" then
-                FinalTheme[field] = `#{theme[field]:ToHex()}`
+                FinalTheme[field] = "#" .. theme[field]:ToHex()
                 LibraryScheme[field] = theme[field]
             elseif typeof(theme[field]) == "string" then
-                FinalTheme[field] = if theme[field]:sub(1, 1) == "#" then theme[field] else `#{theme[field]}`
+                FinalTheme[field] = if theme[field]:sub(1, 1) == "#" then theme[field] else ("#" .. theme[field])
                 LibraryScheme[field] = Color3.fromHex(theme[field])
             else
                 FinalTheme[field] = ThemeManager.BuiltInThemes["默认"][2][field]
@@ -346,7 +339,7 @@ do
 
         local file = self.Folder .. "/themes/" .. name .. ".json"
         if not isfile(file) then
-            return false, "文件无效"
+            return false, "无效文件"
         end
 
         local success = pcall(delfile, file)
@@ -413,7 +406,7 @@ do
         groupbox:AddButton("设为默认", function()
             self:SaveDefault(self.Library.Options.ThemeManager_ThemeList.Value)
             self.Library:Notify(
-                string.format("已将 %q 设为默认主题", self.Library.Options.ThemeManager_ThemeList.Value)
+                string.format("已将默认主题设置为 %q", self.Library.Options.ThemeManager_ThemeList.Value)
             )
         end)
 
@@ -472,7 +465,7 @@ do
             then
                 self:SaveDefault(self.Library.Options.ThemeManager_CustomThemeList.Value)
                 self.Library:Notify(
-                    string.format("已将 %q 设为默认主题", self.Library.Options.ThemeManager_CustomThemeList.Value)
+                    string.format("已将默认主题设置为 %q", self.Library.Options.ThemeManager_CustomThemeList.Value)
                 )
             end
         end)
@@ -482,7 +475,7 @@ do
                 return self.Library:Notify("重置默认失败: 删除文件错误")
             end
 
-            self.Library:Notify("已将默认主题设为无")
+            self.Library:Notify("已将默认主题设置为空")
             self.Library.Options.ThemeManager_CustomThemeList:SetValues(self:ReloadCustomThemes())
             self.Library.Options.ThemeManager_CustomThemeList:SetValue(nil)
         end)
