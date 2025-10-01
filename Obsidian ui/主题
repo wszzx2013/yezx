@@ -39,7 +39,7 @@ do
     ThemeManager.Library = nil
     ThemeManager.AppliedToTab = false
     ThemeManager.BuiltInThemes = {
-        ["yezx专属"] = {
+        ["Yezx"] = {
             1,
             httpService:JSONDecode(
                 [[{"FontColor":"ffffff","MainColor":"fff500","AccentColor":"ffb800","BackgroundColor":"fff500","OutlineColor":"818181"}]]
@@ -256,7 +256,7 @@ do
     end
 
     function ThemeManager:LoadDefault()
-        local theme = "yezx专属"
+        local theme = "Yezx"
         local content = isfile(self.Folder .. "/themes/default.txt") and readfile(self.Folder .. "/themes/default.txt")
 
         local isDefault = true
