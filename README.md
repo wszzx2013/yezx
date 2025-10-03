@@ -9,4 +9,4 @@ loadstring(game:HttpGet("https://raw.github.com/wszzx2013/yezx/refs/heads/main/M
 _G.Key = "卡密"
 loadstring(game:HttpGet("https://raw.github.com/wszzx2013/yezx/refs/heads/main/Misc/Key"))()
 ```
-### 感谢使用yezx Hub
+### 感谢使用yezx
