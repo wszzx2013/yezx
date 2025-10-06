@@ -187,7 +187,7 @@
             }
             
             // 跳转到主网站
-            window.location.href = 'Html/';
+            window.location.href = 'home';
         }
         
         // 检查是否已经有有效的验证
@@ -198,7 +198,7 @@
                     const data = JSON.parse(saved);
                     if (data.expires > Date.now()) {
                         // 验证仍然有效，直接跳转
-                        window.location.href = 'Html/';
+                        window.location.href = 'home';
                     } else {
                         // 验证已过期，清除
                         localStorage.removeItem('yezx_verification');
