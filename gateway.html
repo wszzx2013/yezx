@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证访问 - Yezx脚本</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .gateway-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .turnstile-container {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .access-granted {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-access {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .btn-access:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .security-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="gateway-container">
+        <div class="logo">🎮</div>
+        <h1>Yezx脚本官方网站</h1>
+        <p>为了保护我们的服务安全和用户体验，请先完成人机验证</p>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="turnstile-container">
+            <div class="cf-turnstile" 
+                 data-sitekey="0x4AAAAAAB5EdhgSB-QXAaZ0"
+                 data-callback="onVerify"
+                 data-error-callback="onError"
+                 data-expired-callback="onExpired"
+                 data-theme="light">
+            </div>
+        </div>
+        
+        <div id="accessPanel" style="display: none;">
+            <div class="access-granted">
+                <h3>✅ 验证成功！</h3>
+                <p>您现在可以访问我们的官方网站</p>
+                <button class="btn-access" onclick="enterSite()">进入官方网站</button>
+            </div>
+        </div>
+        
+        <div class="security-info">
+            <p>🔒 此验证系统保护我们免受机器人攻击，确保真实用户获得最佳体验</p>
+        </div>
+    </div>
+
+    <script>
+        let isVerified = false;
+        let verifiedToken = '';
+        
+        function onVerify(token) {
+            console.log('Turnstile 验证成功，Token:', token);
+            isVerified = true;
+            verifiedToken = token;
+            
+            showStatus('✅ 验证成功！您现在可以访问网站。', 'success');
+            document.getElementById('accessPanel').style.display = 'block';
+            
+            // 保存验证状态到 localStorage (24小时有效)
+            const verificationData = {
+                token: token,
+                timestamp: Date.now(),
+                expires: Date.now() + (24 * 60 * 60 * 1000) // 24小时
+            };
+            localStorage.setItem('yezx_verification', JSON.stringify(verificationData));
+        }
+        
+        function onError() {
+            console.log('Turnstile 验证出错');
+            showStatus('❌ 验证失败，请重试。', 'error');
+            isVerified = false;
+            verifiedToken = '';
+        }
+        
+        function onExpired() {
+            console.log('Turnstile 验证已过期');
+            showStatus('⏰ 验证已过期，请重新验证。', 'error');
+            isVerified = false;
+            verifiedToken = '';
+            document.getElementById('accessPanel').style.display = 'none';
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+        }
+        
+        function enterSite() {
+            if (!isVerified) {
+                showStatus('❌ 请先完成人机验证！', 'error');
+                return;
+            }
+            
+            // 跳转到主网站
+            window.location.href = 'Html/';
+        }
+        
+        // 检查是否已经有有效的验证
+        function checkExistingVerification() {
+            try {
+                const saved = localStorage.getItem('yezx_verification');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.expires > Date.now()) {
+                        // 验证仍然有效，直接跳转
+                        window.location.href = 'Html/';
+                    } else {
+                        // 验证已过期，清除
+                        localStorage.removeItem('yezx_verification');
+                    }
+                }
+            } catch (e) {
+                console.log('无法读取验证状态:', e);
+            }
+        }
+        
+        // 页面加载时检查
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingVerification();
+        });
+    </script>
+</body>
+</html>
