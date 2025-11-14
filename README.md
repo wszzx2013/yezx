@@ -1,4 +1,4 @@
-# yezx Hub
+# Yezx
 ## 加载器:
 
 ```lua
